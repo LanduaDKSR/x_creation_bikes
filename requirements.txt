@@ -1,0 +1,11 @@
+ipykernel==6.29.4
+pandas==2.0.3
+folium
+streamlit
+streamlit-folium
+geopandas
+keplergl
+requests
+matplotlib
+shapely
+streamlit-keplergl==0.3.0

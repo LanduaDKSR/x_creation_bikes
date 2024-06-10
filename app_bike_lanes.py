@@ -30,7 +30,8 @@ divider_color = 'red'
 @st.cache_data
 def load_data():
     plz = gpd.read_file('data/raw/plz_areas.geojson')
-    edge_data = pd.read_csv('data/raw/edge_data.csv')
+    #edge_data = pd.read_csv('data/raw/edge_data.csv')
+    edge_data = pd.read_parquet('data/raw/edge_data_reduced.parquet.gz')
     edge_data['shape'] = edge_data['shape'].apply(lambda x: ast.literal_eval(x))
     #edge_data['geo'] = edge_data['shape'].apply(lambda x: LineString(x['coordinates']))
     schools = pd.read_csv('data/raw/schools.csv')
@@ -38,6 +39,7 @@ def load_data():
     schools = gpd.GeoDataFrame(schools, geometry='geometry' ,crs="EPSG:4326")
 
     return plz, edge_data, schools
+
 
 def get_prio(edge_data, length, geometry, option):
     length = length#*1000
@@ -79,6 +81,7 @@ def get_prio(edge_data, length, geometry, option):
     except:
         shortlist = gpd.GeoDataFrame(pd.DataFrame({'shape':[], 'name':[], 'priority':[], 'edge_length':[]}), geometry='shape', crs='EPSG:4326')
     return shortlist
+
 
 
 plz, edge_data, schools = load_data()
@@ -125,9 +128,17 @@ with choice12:
     with choice1:
         st.write("""
                  """)
+        st.write("""
+                 """)
+        st.write("""
+                 """)
         length = st.slider('Length of new bike lanes [km]', 1, 30, 5, 1)
 
     with choice2:
+        st.write("""
+                 """)
+        st.write("""
+                 """)
         option = st.selectbox(
                 "Focus",
                 ("School children", "Inner city", "Outskirts", "Main roads", "Small roads"),
@@ -192,8 +203,7 @@ with col2:
 
 
     shortlist = get_prio(edge_data, length, geometry, option)
-    print(len(shortlist.index))
-
+    
     col11, col12 = st.columns([3,1])
     with col11:
         map_2 = folium.Map([lat, lng], zoom_start=zoom)

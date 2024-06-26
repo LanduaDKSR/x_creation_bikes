@@ -4,6 +4,7 @@ import numpy as np
 import geopandas as gpd
 import ast
 import folium
+from folium.plugins import Draw
 from streamlit_folium import st_folium, folium_static
 from streamlit_keplergl import keplergl_static
 from keplergl import KeplerGl
@@ -152,6 +153,19 @@ with col2:
     with col11:
         map_2 = folium.Map([lat, lng], zoom_start=zoom)
 
+        draw = Draw(
+            draw_options={
+                'polygon': True,  # Enable drawing polygons
+                'polyline': True, # Enable drawing polylines
+                'circle': True,   # Enable drawing circles
+                'rectangle': True, # Enable drawing rectangles
+                'circlemarker':False
+            },
+            edit_options={'edit': True}
+        )
+
+        map_2.add_child(draw)
+
         popup_2 = folium.GeoJsonPopup(
         fields=["name", "priority", "edge_length"],
         #localize=True,
@@ -165,8 +179,10 @@ with col2:
         if geometry != {}:
             folium.GeoJson(geometry, style_function=lambda feature: {'fillColor': 'yellow', 'color': 'black', 'weight': 1, "dashArray": "5, 5"}).add_to(map_2)
         
-        #st_folium(map_2, height=500, width=800, returned_objects=None)
-        folium_static(map_2)#, height=500, width=800)
+        data_2 = st_folium(map_2, height=500, width=800, returned_objects=['all_drawings'])
+        #folium_static(map_2)#, height=500, width=800)
+        print(data_2,'\n')
+        print('NEXT','\n')
 
     with col12:
         #st.dataframe(edge_counts.sort_values('count',ascending=False).head())
